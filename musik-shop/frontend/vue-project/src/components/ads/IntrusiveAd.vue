@@ -197,6 +197,43 @@ onUnmounted(() => {
   animation: ad-blink 1s step-end infinite;
 }
 
+@media (max-width: 768px) {
+  .intrusive-ad--mini {
+    width: 160px;
+    height: 100px;
+    bottom: 0.75rem;
+    right: 0.75rem;
+  }
+
+  .intrusive-ad__close {
+    width: 28px;
+    height: 28px;
+    min-width: 28px;
+    min-height: 28px;
+    font-size: 18px;
+    top: 6px;
+    right: 6px;
+    opacity: 0.85;
+  }
+
+  .intrusive-ad--fullscreen .intrusive-ad__close {
+    top: max(12px, env(safe-area-inset-top, 12px));
+    right: max(12px, env(safe-area-inset-right, 12px));
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+    min-height: 36px;
+    font-size: 22px;
+  }
+
+  .intrusive-ad__hint {
+    font-size: 0.9rem;
+    bottom: max(1rem, env(safe-area-inset-bottom, 1rem));
+    padding: 0 1rem;
+    text-align: center;
+  }
+}
+
 @keyframes ad-blink {
   50% {
     opacity: 0.3;

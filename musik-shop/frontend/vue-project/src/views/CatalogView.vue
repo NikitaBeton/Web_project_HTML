@@ -13,6 +13,7 @@ const brands = ref([])
 const categories = ref([])
 const loading = ref(true)
 const error = ref('')
+const filtersOpen = ref(false)
 
 const selectedBrand = ref('')
 const selectedCategory = ref('')
@@ -93,7 +94,20 @@ onMounted(async () => {
       </header>
 
       <div class="catalog__layout">
-        <aside class="catalog__filters" aria-label="Фильтры товаров">
+        <button
+          type="button"
+          class="catalog__filters-toggle"
+          :aria-expanded="filtersOpen"
+          @click="filtersOpen = !filtersOpen"
+        >
+          {{ filtersOpen ? 'Скрыть фильтры' : 'Показать фильтры' }}
+        </button>
+
+        <aside
+          class="catalog__filters"
+          :class="{ 'catalog__filters--open': filtersOpen }"
+          aria-label="Фильтры товаров"
+        >
           <h2>Фильтры</h2>
 
           <label class="filter-field">
@@ -238,13 +252,45 @@ onMounted(async () => {
   gap: 1.25rem;
 }
 
+.catalog__filters-toggle {
+  display: none;
+  width: 100%;
+  padding: 0.65rem 1rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  color: var(--color-text);
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
 @media (max-width: 768px) {
+  .catalog {
+    padding: 1.5rem var(--page-padding-x) 2.5rem;
+  }
+
   .catalog__layout {
-    grid-template-columns: 1fr;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .catalog__filters-toggle {
+    display: block;
   }
 
   .catalog__filters {
+    display: none;
     position: static;
+  }
+
+  .catalog__filters--open {
+    display: block;
+  }
+
+  .product-grid {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 1rem;
   }
 }
 </style>

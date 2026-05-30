@@ -8,6 +8,7 @@ import { useCartStore } from '@/stores/cart'
 const route = useRoute()
 const router = useRouter()
 const searchQuery = ref('')
+const menuOpen = ref(false)
 const auth = useAuthStore()
 const cart = useCartStore()
 const { isAuthenticated, user } = storeToRefs(auth)
@@ -15,8 +16,20 @@ const { totalItems } = storeToRefs(cart)
 
 function onSearch() {
   const q = searchQuery.value.trim()
+  menuOpen.value = false
   router.push({ path: '/search', query: q ? { q } : {} })
 }
+
+function closeMenu() {
+  menuOpen.value = false
+}
+
+watch(
+  () => route.path,
+  () => {
+    menuOpen.value = false
+  },
+)
 
 watch(
   () => route.query.q,
@@ -34,7 +47,7 @@ watch(
     <div class="header__inner">
       <RouterLink to="/" class="header__logo">
         <img src="/images/logo.png" alt="" class="header__logo-img" width="36" height="36" />
-        Musik Shop
+        <span class="header__logo-text">Musik Shop</span>
       </RouterLink>
 
       <nav class="header__nav" aria-label="Основная навигация">
@@ -48,24 +61,62 @@ watch(
           id="header-search"
           v-model="searchQuery"
           type="search"
-          placeholder="Поиск инструментов…"
+          placeholder="Поиск…"
           class="header__search-input"
         />
         <button type="submit" class="header__search-btn" aria-label="Искать">⌕</button>
       </form>
 
-      <RouterLink to="/cart" class="header__cart" aria-label="Корзина">
-        🛒
-        <span v-if="totalItems" class="header__cart-badge">{{ totalItems }}</span>
-      </RouterLink>
+      <div class="header__actions">
+        <RouterLink to="/cart" class="header__cart" aria-label="Корзина">
+          🛒
+          <span v-if="totalItems" class="header__cart-badge">{{ totalItems }}</span>
+        </RouterLink>
 
+        <RouterLink
+          :to="isAuthenticated ? '/profile' : '/auth/login'"
+          class="header__auth"
+        >
+          <span class="header__auth-full">
+            {{ isAuthenticated ? user?.username : 'Вход / Регистрация' }}
+          </span>
+          <span class="header__auth-short">
+            {{ isAuthenticated ? user?.username : 'Вход' }}
+          </span>
+        </RouterLink>
+
+        <button
+          type="button"
+          class="header__burger"
+          :aria-expanded="menuOpen"
+          aria-controls="header-mobile-menu"
+          aria-label="Меню"
+          @click="menuOpen = !menuOpen"
+        >
+          <span class="header__burger-line" :class="{ 'header__burger-line--open': menuOpen }" />
+          <span class="header__burger-line" :class="{ 'header__burger-line--open': menuOpen }" />
+          <span class="header__burger-line" :class="{ 'header__burger-line--open': menuOpen }" />
+        </button>
+      </div>
+    </div>
+
+    <nav
+      id="header-mobile-menu"
+      class="header__mobile-nav"
+      :class="{ 'header__mobile-nav--open': menuOpen }"
+      aria-label="Мобильная навигация"
+    >
+      <RouterLink to="/catalog" class="header__mobile-link" @click="closeMenu">Каталог</RouterLink>
+      <RouterLink to="/about" class="header__mobile-link" @click="closeMenu">О нас</RouterLink>
+      <RouterLink to="/search" class="header__mobile-link" @click="closeMenu">Поиск</RouterLink>
       <RouterLink
         :to="isAuthenticated ? '/profile' : '/auth/login'"
-        class="header__auth"
+        class="header__mobile-link header__mobile-link--accent"
+        @click="closeMenu"
       >
-        {{ isAuthenticated ? user?.username : 'Вход / Регистрация' }}
+        {{ isAuthenticated ? 'Личный кабинет' : 'Вход / Регистрация' }}
       </RouterLink>
-    </div>
+    </nav>
   </header>
 </template>
 
@@ -84,11 +135,11 @@ watch(
 .header__inner {
   max-width: var(--max-width);
   margin: 0 auto;
-  padding: 0 1.25rem;
+  padding: 0 var(--page-padding-x);
   height: 100%;
   display: flex;
   align-items: center;
-  gap: 1.25rem;
+  gap: 1rem;
 }
 
 .header__logo {
@@ -99,6 +150,7 @@ watch(
   font-size: 1.15rem;
   color: var(--color-accent);
   white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .header__logo-img {
@@ -111,6 +163,7 @@ watch(
 .header__nav {
   display: flex;
   gap: 1.25rem;
+  flex-shrink: 0;
 }
 
 .header__link {
@@ -129,10 +182,12 @@ watch(
   max-width: 320px;
   display: flex;
   margin-left: auto;
+  min-width: 0;
 }
 
 .header__search-input {
   flex: 1;
+  min-width: 0;
   padding: 0.5rem 0.75rem;
   background: var(--color-surface);
   border: 1px solid var(--color-border);
@@ -158,16 +213,25 @@ watch(
   border-radius: 0 6px 6px 0;
   color: var(--color-text-muted);
   font-size: 1.1rem;
+  flex-shrink: 0;
 }
 
 .header__search-btn:hover {
   color: var(--color-accent);
 }
 
+.header__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
 .header__cart {
   position: relative;
   font-size: 1.25rem;
-  padding: 0.25rem;
+  padding: 0.35rem;
+  line-height: 1;
 }
 
 .header__cart-badge {
@@ -196,10 +260,85 @@ watch(
   border-radius: 6px;
   white-space: nowrap;
   transition: background 0.2s;
+  max-width: 140px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .header__auth:hover {
   background: var(--color-accent-hover);
+}
+
+.header__auth-short {
+  display: none;
+}
+
+.header__burger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0.5rem;
+  background: transparent;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+}
+
+.header__burger-line {
+  display: block;
+  width: 100%;
+  height: 2px;
+  background: var(--color-text);
+  border-radius: 1px;
+  transition: transform 0.2s, opacity 0.2s;
+}
+
+.header__burger-line:nth-child(1).header__burger-line--open {
+  transform: translateY(7px) rotate(45deg);
+}
+
+.header__burger-line:nth-child(2).header__burger-line--open {
+  opacity: 0;
+}
+
+.header__burger-line:nth-child(3).header__burger-line--open {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+.header__mobile-nav {
+  display: none;
+  flex-direction: column;
+  padding: 0 var(--page-padding-x);
+  max-height: 0;
+  overflow: hidden;
+  background: var(--color-surface);
+  border-bottom: 1px solid transparent;
+  transition: max-height 0.25s ease, padding 0.25s ease, border-color 0.25s ease;
+}
+
+.header__mobile-nav--open {
+  max-height: 240px;
+  padding: 0.75rem var(--page-padding-x) 1rem;
+  border-bottom-color: var(--color-border);
+}
+
+.header__mobile-link {
+  display: block;
+  padding: 0.75rem 0;
+  color: var(--color-text);
+  font-size: 1rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.header__mobile-link:last-child {
+  border-bottom: none;
+}
+
+.header__mobile-link--accent {
+  color: var(--color-accent);
+  font-weight: 600;
 }
 
 .visually-hidden {
@@ -214,17 +353,58 @@ watch(
 }
 
 @media (max-width: 768px) {
+  .header {
+    height: auto;
+    min-height: var(--header-height);
+  }
+
+  .header__inner {
+    flex-wrap: wrap;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    gap: 0.5rem 0.75rem;
+  }
+
   .header__nav {
     display: none;
   }
 
   .header__search {
-    max-width: 120px;
+    order: 3;
+    flex: 1 1 100%;
+    max-width: none;
+    margin-left: 0;
   }
 
   .header__auth {
-    font-size: 0.75rem;
-    padding: 0.4rem 0.6rem;
+    display: none;
+  }
+
+  .header__auth-full {
+    display: none;
+  }
+
+  .header__auth-short {
+    display: inline;
+  }
+
+  .header__burger {
+    display: flex;
+  }
+
+  .header__mobile-nav {
+    display: flex;
+  }
+}
+
+@media (max-width: 480px) {
+  .header__logo-text {
+    display: none;
+  }
+
+  .header__logo-img {
+    width: 32px;
+    height: 32px;
   }
 }
 </style>

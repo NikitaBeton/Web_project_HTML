@@ -369,8 +369,32 @@ onMounted(loadProduct)
 }
 
 @media (max-width: 768px) {
+  .product-page {
+    padding: 1.5rem var(--page-padding-x) 2.5rem;
+  }
+
   .product-detail {
     grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .product-detail h1 {
+    font-size: 1.4rem;
+  }
+
+  .product-detail__buy {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .btn-cart,
+  .btn-fav {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .quantity {
+    align-self: flex-start;
   }
 }
 </style>
