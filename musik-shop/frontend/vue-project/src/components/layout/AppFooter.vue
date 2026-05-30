@@ -137,8 +137,24 @@ const socials = [
 }
 
 @media (max-width: 768px) {
+  .footer {
+    margin-top: 2.5rem;
+  }
+
   .footer__inner {
     grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    padding: 2rem var(--page-padding-x) 1.25rem;
+  }
+
+  .footer__brand {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 480px) {
+  .footer__inner {
+    grid-template-columns: 1fr;
   }
 }
 </style>

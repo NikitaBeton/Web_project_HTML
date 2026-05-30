@@ -19,10 +19,14 @@
   --font-sans: 'Segoe UI', system-ui, -apple-system, sans-serif;
   --max-width: 1200px;
   --header-height: 64px;
+  --page-padding-x: 1.25rem;
+  --breakpoint-md: 768px;
+  --breakpoint-sm: 480px;
 }
 
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
 }
 
 body {
@@ -31,6 +35,15 @@ body {
   color: var(--color-text);
   line-height: 1.5;
   min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-text-size-adjust: 100%;
+}
+
+@media (max-width: 768px) {
+  :root {
+    --header-height: 56px;
+    --page-padding-x: 1rem;
+  }
 }
 
 a {

@@ -51,4 +51,16 @@ import { RouterLink, RouterView } from 'vue-router'
   height: 40px;
   object-fit: contain;
 }
+
+@media (max-width: 480px) {
+  .auth-page {
+    padding: 1.25rem var(--page-padding-x);
+    align-items: flex-start;
+    padding-top: 2rem;
+  }
+
+  .auth-card {
+    padding: 1.5rem;
+  }
+}
 </style>

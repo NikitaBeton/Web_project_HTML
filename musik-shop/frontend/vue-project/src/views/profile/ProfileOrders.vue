@@ -179,4 +179,15 @@ function submitReview(orderId) {
   border-radius: 6px;
   font-size: 0.85rem;
 }
+
+@media (max-width: 640px) {
+  .order-card__head {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .order-card__status {
+    align-self: flex-start;
+  }
+}
 </style>

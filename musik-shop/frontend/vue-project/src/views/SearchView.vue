@@ -216,4 +216,24 @@ onMounted(applyFromRoute)
   clip: rect(0, 0, 0, 0);
   border: 0;
 }
+
+@media (max-width: 640px) {
+  .search-page {
+    padding: 1.5rem var(--page-padding-x) 2.5rem;
+  }
+
+  .search-form {
+    flex-direction: column;
+    max-width: none;
+  }
+
+  .search-form__btn {
+    width: 100%;
+  }
+
+  .product-grid {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 1rem;
+  }
+}
 </style>

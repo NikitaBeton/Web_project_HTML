@@ -174,4 +174,33 @@ onMounted(async () => {
   font-weight: 600;
   color: var(--color-text-muted);
 }
+
+@media (max-width: 768px) {
+  .hero {
+    min-height: 240px;
+    padding: 2rem var(--page-padding-x);
+  }
+
+  .hero__text {
+    font-size: 1rem;
+  }
+
+  .catalog-preview {
+    padding: 2rem var(--page-padding-x);
+  }
+
+  .product-grid {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 1rem;
+  }
+
+  .brands {
+    padding: 0 var(--page-padding-x) 1.5rem;
+  }
+
+  .brands__list {
+    gap: 1rem 1.5rem;
+    font-size: 1rem;
+  }
+}
 </style>

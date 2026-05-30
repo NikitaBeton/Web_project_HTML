@@ -217,4 +217,26 @@ const team = [
 .contacts-grid dd {
   font-size: 1rem;
 }
+
+@media (max-width: 768px) {
+  .about {
+    padding: 1.5rem var(--page-padding-x) 2.5rem;
+  }
+
+  .about__hero {
+    margin-bottom: 2rem;
+  }
+
+  .about__hero h1 {
+    font-size: 1.6rem;
+  }
+
+  .about__lead {
+    font-size: 1rem;
+  }
+
+  .team-grid {
+    grid-template-columns: 1fr;
+  }
+}
 </style>

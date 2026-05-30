@@ -103,6 +103,8 @@ const nav = [
 @media (max-width: 768px) {
   .profile-layout {
     grid-template-columns: 1fr;
+    padding: 1.5rem var(--page-padding-x) 2.5rem;
+    gap: 1rem;
   }
 
   .profile-sidebar {
@@ -117,6 +119,8 @@ const nav = [
 
   .profile-sidebar__link {
     margin-bottom: 0;
+    font-size: 0.9rem;
+    padding: 0.5rem 0.65rem;
   }
 }
 </style>
