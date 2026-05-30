@@ -1,0 +1,18 @@
+{
+  "name": "musik-shop",
+  "private": true,
+  "description": "Musik Shop — frontend + backend",
+  "scripts": {
+    "dev": "npm run dev --prefix frontend/vue-project",
+    "dev:frontend": "npm run dev --prefix frontend/vue-project",
+    "dev:backend": "npm run dev --prefix backend",
+    "start:backend": "npm run start --prefix backend",
+    "build": "npm run build --prefix frontend/vue-project",
+    "install:all": "npm install --prefix backend && npm install --prefix frontend/vue-project",
+    "network:url": "node scripts/network-url.mjs",
+    "share": "node scripts/public-tunnel.mjs"
+  },
+  "devDependencies": {
+    "localtunnel": "^2.0.2"
+  }
+}
