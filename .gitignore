@@ -1,0 +1,10 @@
+db-credentials.txt
+musik-shop/backend/.env
+musik-shop/network-link.txt
+musik-shop/public-link.txt
+
+node_modules/
+dist/
+.env
+.env.local
+*.log
