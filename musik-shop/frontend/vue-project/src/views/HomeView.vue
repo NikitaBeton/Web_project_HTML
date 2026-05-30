@@ -4,6 +4,7 @@ import { RouterLink } from 'vue-router'
 import PageLayout from '@/components/layout/PageLayout.vue'
 import ProductCard from '@/components/products/ProductCard.vue'
 import IntrusiveAd from '@/components/ads/IntrusiveAd.vue'
+import IntrusiveAdLeft from '@/components/ads/IntrusiveAdLeft.vue'
 import { fetchProducts } from '@/api/products'
 
 const products = ref([])
@@ -58,6 +59,7 @@ onMounted(async () => {
     </section>
   </PageLayout>
   <IntrusiveAd />
+  <IntrusiveAdLeft />
 </template>
 
 <style scoped>
