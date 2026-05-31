@@ -5,6 +5,7 @@ const { body, query } = require('express-validator')
 const pool = require('../config/db')
 const { handleValidation } = require('../utils/validation')
 const { formatUser } = require('../utils/user')
+const { validatePassword } = require('../utils/password')
 
 const router = express.Router()
 
@@ -41,7 +42,13 @@ router.post(
     .trim()
     .isLength({ min: 2, max: 100 })
     .withMessage('Имя: от 2 до 100 символов'),
-  body('password').isLength({ min: 6 }).withMessage('Пароль: минимум 6 символов'),
+  body('password').custom((value) => {
+    const { valid, errors } = validatePassword(value)
+    if (!valid) {
+      throw new Error(errors.join('. '))
+    }
+    return true
+  }),
   async (req, res) => {
     if (handleValidation(req, res)) return
 

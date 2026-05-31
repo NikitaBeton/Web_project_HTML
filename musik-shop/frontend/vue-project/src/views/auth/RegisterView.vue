@@ -1,9 +1,10 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useRouter, RouterLink } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import { checkEmail } from '@/api/auth'
 import { AUTH_ROUTES } from '@/router/routes'
+import { validatePassword } from '@/utils/validatePassword'
 
 const router = useRouter()
 const auth = useAuthStore()
@@ -16,6 +17,10 @@ const error = ref('')
 const emailHint = ref('')
 const submitting = ref(false)
 let emailCheckTimer = null
+
+const passwordCheck = computed(() => validatePassword(password.value))
+const passwordRules = computed(() => passwordCheck.value.rules)
+const showPasswordRules = computed(() => password.value.length > 0)
 
 function onEmailInput() {
   emailHint.value = ''
@@ -38,6 +43,11 @@ async function onSubmit() {
 
   if (password.value !== passwordConfirm.value) {
     error.value = 'Пароли не совпадают'
+    return
+  }
+
+  if (!passwordCheck.value.valid) {
+    error.value = passwordCheck.value.errors.join('. ')
     return
   }
 
@@ -108,9 +118,19 @@ async function onSubmit() {
         type="password"
         autocomplete="new-password"
         required
-        minlength="6"
-        placeholder="Минимум 6 символов"
+        minlength="8"
+        placeholder="Надёжный пароль"
       />
+      <ul v-if="showPasswordRules" class="auth-form__password-rules" aria-live="polite">
+        <li
+          v-for="rule in passwordRules"
+          :key="rule.id"
+          class="auth-form__password-rule"
+          :class="{ 'auth-form__password-rule--ok': rule.passed }"
+        >
+          {{ rule.passed ? '✓' : '○' }} {{ rule.message }}
+        </li>
+      </ul>
     </label>
 
     <label class="auth-form__field">
@@ -137,4 +157,19 @@ async function onSubmit() {
 
 <style scoped>
 @import './auth-form.css';
+
+.auth-form__password-rules {
+  list-style: none;
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+}
+
+.auth-form__password-rule {
+  margin-bottom: 0.15rem;
+}
+
+.auth-form__password-rule--ok {
+  color: #1a7f37;
+}
 </style>
