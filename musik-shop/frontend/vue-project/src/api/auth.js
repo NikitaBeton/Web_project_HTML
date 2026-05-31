@@ -15,7 +15,3 @@ export function login(payload) {
 export function logout() {
   return api.post('/auth/logout')
 }
-
-export function fetchMe() {
-  return api.get('/auth/me')
-}

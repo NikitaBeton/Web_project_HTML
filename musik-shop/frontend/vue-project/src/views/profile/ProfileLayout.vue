@@ -3,15 +3,16 @@ import { RouterLink, RouterView } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import PageLayout from '@/components/layout/PageLayout.vue'
 import { useAuthStore } from '@/stores/auth'
+import { ACCOUNT_ROUTES } from '@/router/routes'
 
 const auth = useAuthStore()
 const { user } = storeToRefs(auth)
 
 const nav = [
-  { to: '/profile', label: 'Профиль', exact: true },
-  { to: '/profile/orders', label: 'Заказы' },
-  { to: '/profile/favorites', label: 'Избранное' },
-  { to: '/profile/settings', label: 'Настройки' },
+  { to: ACCOUNT_ROUTES.root, label: 'Профиль', exact: true },
+  { to: ACCOUNT_ROUTES.orders, label: 'Заказы' },
+  { to: ACCOUNT_ROUTES.favorites, label: 'Избранное' },
+  { to: ACCOUNT_ROUTES.settings, label: 'Настройки' },
 ]
 </script>
 

@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import { useRouter, RouterLink } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import { checkEmail } from '@/api/auth'
+import { AUTH_ROUTES } from '@/router/routes'
 
 const router = useRouter()
 const auth = useAuthStore()
@@ -129,7 +130,7 @@ async function onSubmit() {
 
     <p class="auth-form__switch">
       Уже есть аккаунт?
-      <RouterLink to="/auth/login">Войти</RouterLink>
+      <RouterLink :to="AUTH_ROUTES.login">Войти</RouterLink>
     </p>
   </form>
 </template>

@@ -4,6 +4,7 @@ import { useRoute, useRouter, RouterLink } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { useAuthStore } from '@/stores/auth'
 import { useCartStore } from '@/stores/cart'
+import { AUTH_ROUTES, ACCOUNT_ROUTES } from '@/router/routes'
 
 const route = useRoute()
 const router = useRouter()
@@ -74,7 +75,7 @@ watch(
         </RouterLink>
 
         <RouterLink
-          :to="isAuthenticated ? '/profile' : '/auth/login'"
+          :to="isAuthenticated ? ACCOUNT_ROUTES.root : AUTH_ROUTES.login"
           class="header__auth"
         >
           <span class="header__auth-full">
@@ -110,7 +111,7 @@ watch(
       <RouterLink to="/about" class="header__mobile-link" @click="closeMenu">О нас</RouterLink>
       <RouterLink to="/search" class="header__mobile-link" @click="closeMenu">Поиск</RouterLink>
       <RouterLink
-        :to="isAuthenticated ? '/profile' : '/auth/login'"
+        :to="isAuthenticated ? ACCOUNT_ROUTES.root : AUTH_ROUTES.login"
         class="header__mobile-link header__mobile-link--accent"
         @click="closeMenu"
       >

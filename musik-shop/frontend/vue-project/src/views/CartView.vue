@@ -6,6 +6,7 @@ import { formatPrice } from '@/utils/formatPrice'
 import { useCartStore } from '@/stores/cart'
 import { useOrdersStore } from '@/stores/orders'
 import { useRouter } from 'vue-router'
+import { ACCOUNT_ROUTES } from '@/router/routes'
 
 const cart = useCartStore()
 const orders = useOrdersStore()
@@ -17,7 +18,7 @@ function checkout() {
   if (isEmpty.value) return
   orders.createFromCart(cart.items)
   cart.clear()
-  router.push('/profile/orders')
+  router.push(ACCOUNT_ROUTES.orders)
 }
 </script>
 

@@ -2,6 +2,7 @@ import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import { TOKEN_KEY } from '@/api/client'
 import * as authApi from '@/api/auth'
+import * as accountApi from '@/api/account'
 
 export const useAuthStore = defineStore('auth', () => {
   const user = ref(null)
@@ -31,7 +32,7 @@ export const useAuthStore = defineStore('auth', () => {
 
     loading.value = true
     try {
-      const { data } = await authApi.fetchMe()
+      const { data } = await accountApi.fetchMe()
       user.value = data.user
     } catch {
       clearSession()

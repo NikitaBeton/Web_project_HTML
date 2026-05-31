@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import { useRouter, useRoute, RouterLink } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
+import { AUTH_ROUTES } from '@/router/routes'
 
 const router = useRouter()
 const route = useRoute()
@@ -63,7 +64,7 @@ async function onSubmit() {
 
     <p class="auth-form__switch">
       Нет аккаунта?
-      <RouterLink to="/auth/register">Зарегистрироваться</RouterLink>
+      <RouterLink :to="AUTH_ROUTES.register">Зарегистрироваться</RouterLink>
     </p>
   </form>
 </template>

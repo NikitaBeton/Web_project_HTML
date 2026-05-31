@@ -33,7 +33,8 @@ async function main() {
 # Обновлено: ${new Date().toLocaleString('ru-RU')}
 
 Название: ${title}
-Ссылка:   ${url}
+Ссылка:   ${url}/
+API:      ${url}/api/health
 
 Как открыть с телефона или другого города:
 1. На этом компьютере должны работать backend и frontend (npm run dev:backend, npm run dev)
@@ -48,7 +49,8 @@ async function main() {
 
   console.log('  ─────────────────────────────────────────')
   console.log(`  ${title}`)
-  console.log(`  ${url}`)
+  console.log(`  Сайт:  ${url}/`)
+  console.log(`  API:   ${url}/api/health`)
   console.log('  ─────────────────────────────────────────')
   console.log(`  Сохранено: ${OUT_FILE}`)
   console.log('\n  Туннель активен. Остановка: Ctrl+C\n')
