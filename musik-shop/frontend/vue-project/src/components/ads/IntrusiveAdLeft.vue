@@ -117,7 +117,13 @@ onUnmounted(() => {
           target="_blank"
           rel="noopener noreferrer"
         >
-          <img :src="adImageSrc" alt="Реклама" class="intrusive-ad-left__img" />
+          <img
+            :src="adImageSrc"
+            alt="Реклама"
+            class="intrusive-ad-left__img"
+            width="247"
+            height="204"
+          />
         </a>
       </div>
     </div>
@@ -130,8 +136,9 @@ onUnmounted(() => {
   z-index: 9999;
   bottom: 1rem;
   left: 1rem;
-  width: 220px;
-  height: 140px;
+  width: 185px;
+  aspect-ratio: 247 / 204;
+  height: auto;
   pointer-events: auto;
 }
 
@@ -199,14 +206,13 @@ onUnmounted(() => {
   display: block;
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   background: #fff;
 }
 
 @media (max-width: 768px) {
   .intrusive-ad-left {
-    width: 168px;
-    height: 104px;
+    width: 148px;
     bottom: 0.75rem;
     left: 0.75rem;
   }

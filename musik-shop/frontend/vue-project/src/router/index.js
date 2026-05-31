@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
-import { AUTH_ROUTES, ACCOUNT_ROUTES } from '@/router/routes'
+import { AUTH_ROUTES, ACCOUNT_ROUTES, routeRequiresAuth } from '@/router/routes'
 import HomeView from '@/views/HomeView.vue'
 
 const router = createRouter({
@@ -65,31 +65,47 @@ const router = createRouter({
     {
       path: ACCOUNT_ROUTES.root,
       component: () => import('@/views/profile/ProfileLayout.vue'),
-      meta: { requiresAuth: true, zone: 'account' },
+      meta: { requiresAuth: true, zone: 'private' },
       children: [
         {
           path: '',
           name: 'account',
           component: () => import('@/views/profile/ProfileOverview.vue'),
-          meta: { title: 'Личный кабинет — Musik Shop', zone: 'account' },
+          meta: {
+            title: 'Личный кабинет — Musik Shop',
+            zone: 'private',
+            requiresAuth: true,
+          },
         },
         {
           path: 'orders',
           name: 'account-orders',
           component: () => import('@/views/profile/ProfileOrders.vue'),
-          meta: { title: 'Заказы — Musik Shop', zone: 'account' },
+          meta: {
+            title: 'Заказы — Musik Shop',
+            zone: 'private',
+            requiresAuth: true,
+          },
         },
         {
           path: 'favorites',
           name: 'account-favorites',
           component: () => import('@/views/profile/ProfileFavorites.vue'),
-          meta: { title: 'Избранное — Musik Shop', zone: 'account' },
+          meta: {
+            title: 'Избранное — Musik Shop',
+            zone: 'private',
+            requiresAuth: true,
+          },
         },
         {
           path: 'settings',
           name: 'account-settings',
           component: () => import('@/views/profile/ProfileSettings.vue'),
-          meta: { title: 'Настройки — Musik Shop', zone: 'account' },
+          meta: {
+            title: 'Настройки — Musik Shop',
+            zone: 'private',
+            requiresAuth: true,
+          },
         },
       ],
     },
@@ -112,7 +128,7 @@ router.beforeEach(async (to) => {
     await auth.init()
   }
 
-  if (to.meta.requiresAuth && !auth.isAuthenticated) {
+  if (routeRequiresAuth(to.matched) && !auth.isAuthenticated) {
     return {
       name: 'login',
       query: { redirect: to.fullPath },

@@ -4,7 +4,7 @@ import { useRoute, useRouter, RouterLink } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { useAuthStore } from '@/stores/auth'
 import { useCartStore } from '@/stores/cart'
-import { AUTH_ROUTES, ACCOUNT_ROUTES } from '@/router/routes'
+import { AUTH_ROUTES, ACCOUNT_ROUTES, routeRequiresAuth } from '@/router/routes'
 
 const route = useRoute()
 const router = useRouter()
@@ -23,6 +23,14 @@ function onSearch() {
 
 function closeMenu() {
   menuOpen.value = false
+}
+
+async function handleLogout() {
+  menuOpen.value = false
+  await auth.logout()
+  if (route.meta.requiresAuth || routeRequiresAuth(route.matched)) {
+    await router.push(AUTH_ROUTES.login)
+  }
 }
 
 watch(
@@ -74,17 +82,13 @@ watch(
           <span v-if="totalItems" class="header__cart-badge">{{ totalItems }}</span>
         </RouterLink>
 
-        <RouterLink
-          :to="isAuthenticated ? ACCOUNT_ROUTES.root : AUTH_ROUTES.login"
-          class="header__auth"
-        >
-          <span class="header__auth-full">
-            {{ isAuthenticated ? user?.username : 'Вход / Регистрация' }}
-          </span>
-          <span class="header__auth-short">
-            {{ isAuthenticated ? user?.username : 'Вход' }}
-          </span>
-        </RouterLink>
+        <div v-if="isAuthenticated" class="header__user-block">
+          <RouterLink :to="ACCOUNT_ROUTES.root" class="header__user" :title="user?.email">
+            {{ user?.username }}
+          </RouterLink>
+          <button type="button" class="header__logout" @click="handleLogout">Выйти</button>
+        </div>
+        <RouterLink v-else :to="AUTH_ROUTES.login" class="header__auth">Войти</RouterLink>
 
         <button
           type="button"
@@ -110,12 +114,29 @@ watch(
       <RouterLink to="/catalog" class="header__mobile-link" @click="closeMenu">Каталог</RouterLink>
       <RouterLink to="/about" class="header__mobile-link" @click="closeMenu">О нас</RouterLink>
       <RouterLink to="/search" class="header__mobile-link" @click="closeMenu">Поиск</RouterLink>
+      <template v-if="isAuthenticated">
+        <RouterLink
+          :to="ACCOUNT_ROUTES.root"
+          class="header__mobile-link header__mobile-link--accent"
+          @click="closeMenu"
+        >
+          {{ user?.username }}
+        </RouterLink>
+        <button
+          type="button"
+          class="header__mobile-link header__mobile-logout"
+          @click="handleLogout"
+        >
+          Выйти
+        </button>
+      </template>
       <RouterLink
-        :to="isAuthenticated ? ACCOUNT_ROUTES.root : AUTH_ROUTES.login"
+        v-else
+        :to="AUTH_ROUTES.login"
         class="header__mobile-link header__mobile-link--accent"
         @click="closeMenu"
       >
-        {{ isAuthenticated ? 'Личный кабинет' : 'Вход / Регистрация' }}
+        Войти
       </RouterLink>
     </nav>
   </header>
@@ -261,17 +282,48 @@ watch(
   border-radius: 6px;
   white-space: nowrap;
   transition: background 0.2s;
-  max-width: 140px;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 .header__auth:hover {
   background: var(--color-accent-hover);
 }
 
-.header__auth-short {
-  display: none;
+.header__user-block {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+.header__user {
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: var(--color-text);
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.header__user:hover {
+  color: var(--color-accent);
+}
+
+.header__logout {
+  padding: 0.45rem 0.85rem;
+  background: transparent;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  color: var(--color-text-muted);
+  font-size: 0.85rem;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: border-color 0.2s, color 0.2s;
+}
+
+.header__logout:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
 }
 
 .header__burger {
@@ -320,7 +372,7 @@ watch(
 }
 
 .header__mobile-nav--open {
-  max-height: 240px;
+  max-height: 320px;
   padding: 0.75rem var(--page-padding-x) 1rem;
   border-bottom-color: var(--color-border);
 }
@@ -340,6 +392,23 @@ watch(
 .header__mobile-link--accent {
   color: var(--color-accent);
   font-weight: 600;
+}
+
+.header__mobile-logout {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 0.75rem 0;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--color-border);
+  color: var(--color-text-muted);
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.header__mobile-logout:hover {
+  color: var(--color-accent);
 }
 
 .visually-hidden {
@@ -377,16 +446,14 @@ watch(
     margin-left: 0;
   }
 
+  .header__user-block {
+    display: none;
+  }
+
   .header__auth {
-    display: none;
-  }
-
-  .header__auth-full {
-    display: none;
-  }
-
-  .header__auth-short {
-    display: inline;
+    display: inline-flex;
+    padding: 0.4rem 0.75rem;
+    font-size: 0.8rem;
   }
 
   .header__burger {

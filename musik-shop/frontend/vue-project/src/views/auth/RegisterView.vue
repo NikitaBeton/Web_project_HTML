@@ -119,7 +119,7 @@ async function onSubmit() {
         autocomplete="new-password"
         required
         minlength="8"
-        placeholder="Надёжный пароль"
+        placeholder="Пароль"
       />
       <ul v-if="showPasswordRules" class="auth-form__password-rules" aria-live="polite">
         <li

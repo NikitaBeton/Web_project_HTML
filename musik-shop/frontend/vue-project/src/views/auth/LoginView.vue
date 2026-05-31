@@ -20,7 +20,9 @@ async function onSubmit() {
   try {
     await auth.login({ username: username.value.trim(), password: password.value })
     const redirect = typeof route.query.redirect === 'string' ? route.query.redirect : '/'
-    await router.push(redirect)
+    const safeRedirect =
+      redirect.startsWith('/') && !redirect.startsWith('//') ? redirect : '/'
+    await router.push(safeRedirect)
   } catch (err) {
     error.value = err.response?.data?.message ?? 'Не удалось войти. Проверьте данные.'
   } finally {
@@ -64,7 +66,11 @@ async function onSubmit() {
 
     <p class="auth-form__switch">
       Нет аккаунта?
-      <RouterLink :to="AUTH_ROUTES.register">Зарегистрироваться</RouterLink>
+      <RouterLink
+        :to="{ path: AUTH_ROUTES.register, query: route.query.redirect ? { redirect: route.query.redirect } : {} }"
+      >
+        Зарегистрироваться
+      </RouterLink>
     </p>
   </form>
 </template>
