@@ -60,6 +60,10 @@ async function onSubmit() {
       />
     </label>
 
+    <p class="auth-form__forgot">
+      <RouterLink :to="AUTH_ROUTES.resetPassword">Забыли пароль?</RouterLink>
+    </p>
+
     <button type="submit" class="auth-form__submit" :disabled="submitting || auth.loading">
       {{ submitting ? 'Вход…' : 'Войти' }}
     </button>

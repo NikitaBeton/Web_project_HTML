@@ -12,6 +12,7 @@ export const PUBLIC_ROUTES = {
 export const AUTH_ROUTES = {
   login: '/auth/login',
   register: '/auth/register',
+  resetPassword: '/auth/reset-password',
 }
 
 /** Приватная зона — только для авторизованных (минимум 3 раздела) */

@@ -15,3 +15,7 @@ export function login(payload) {
 export function logout() {
   return api.post('/auth/logout')
 }
+
+export function resetPassword(payload) {
+  return api.post('/auth/reset-password', payload)
+}

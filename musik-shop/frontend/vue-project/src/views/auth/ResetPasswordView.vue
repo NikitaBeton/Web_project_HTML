@@ -1,53 +1,28 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { useRouter, RouterLink } from 'vue-router'
-import { useAuthStore } from '@/stores/auth'
-import { checkEmail } from '@/api/auth'
+import { resetPassword } from '@/api/auth'
 import { AUTH_ROUTES } from '@/router/routes'
 import { validatePassword } from '@/utils/validatePassword'
 import { validateRecoveryKeyword } from '@/utils/validateRecoveryKeyword'
 
 const router = useRouter()
-const auth = useAuthStore()
 
-const email = ref('')
 const username = ref('')
+const recoveryKeyword = ref('')
 const password = ref('')
 const passwordConfirm = ref('')
-const recoveryKeyword = ref('')
-const recoveryKeywordConfirm = ref('')
 const error = ref('')
-const emailHint = ref('')
+const success = ref('')
 const submitting = ref(false)
-let emailCheckTimer = null
 
 const passwordCheck = computed(() => validatePassword(password.value))
 const passwordRules = computed(() => passwordCheck.value.rules)
 const showPasswordRules = computed(() => password.value.length > 0)
 
-function onEmailInput() {
-  emailHint.value = ''
-  clearTimeout(emailCheckTimer)
-
-  if (!email.value.includes('@')) return
-
-  emailCheckTimer = setTimeout(async () => {
-    try {
-      const { data } = await checkEmail(email.value.trim())
-      emailHint.value = data.available ? 'Email свободен' : 'Этот email уже занят'
-    } catch {
-      emailHint.value = ''
-    }
-  }, 400)
-}
-
 async function onSubmit() {
   error.value = ''
-
-  if (password.value !== passwordConfirm.value) {
-    error.value = 'Пароли не совпадают'
-    return
-  }
+  success.value = ''
 
   const keywordCheck = validateRecoveryKeyword(recoveryKeyword.value)
   if (!keywordCheck.valid) {
@@ -55,8 +30,8 @@ async function onSubmit() {
     return
   }
 
-  if (recoveryKeyword.value !== recoveryKeywordConfirm.value) {
-    error.value = 'Ключевые слова не совпадают'
+  if (password.value !== passwordConfirm.value) {
+    error.value = 'Пароли не совпадают'
     return
   }
 
@@ -68,19 +43,21 @@ async function onSubmit() {
   submitting.value = true
 
   try {
-    await auth.register({
-      email: email.value.trim(),
+    const { data } = await resetPassword({
       username: username.value.trim(),
-      password: password.value,
       recoveryKeyword: recoveryKeyword.value,
+      password: password.value,
     })
-    await router.push('/')
+    success.value = data.message ?? 'Пароль успешно изменён'
+    setTimeout(() => {
+      router.push(AUTH_ROUTES.login)
+    }, 1500)
   } catch (err) {
     const apiError = err.response?.data
     if (apiError?.errors?.length) {
       error.value = apiError.errors.map((e) => e.message).join('. ')
     } else {
-      error.value = apiError?.message ?? 'Не удалось зарегистрироваться'
+      error.value = apiError?.message ?? 'Не удалось сменить пароль'
     }
   } finally {
     submitting.value = false
@@ -90,9 +67,11 @@ async function onSubmit() {
 
 <template>
   <form class="auth-form" @submit.prevent="onSubmit">
-    <h1 class="auth-form__title">Регистрация</h1>
+    <h1 class="auth-form__title">Восстановление пароля</h1>
+    <p class="auth-form__lead">Введите логин, ключевое слово и новый пароль</p>
 
     <p v-if="error" class="auth-form__error" role="alert">{{ error }}</p>
+    <p v-if="success" class="auth-form__success" role="status">{{ success }}</p>
 
     <label class="auth-form__field">
       <span>Логин</span>
@@ -102,28 +81,8 @@ async function onSubmit() {
         autocomplete="username"
         required
         minlength="2"
-        maxlength="100"
-        placeholder="Придумайте логин"
+        placeholder="Ваш логин"
       />
-    </label>
-
-    <label class="auth-form__field">
-      <span>Email</span>
-      <input
-        v-model="email"
-        type="email"
-        autocomplete="email"
-        required
-        placeholder="you@example.com"
-        @input="onEmailInput"
-      />
-      <small
-        v-if="emailHint"
-        class="auth-form__hint"
-        :class="{ 'auth-form__hint--bad': emailHint.includes('занят') }"
-      >
-        {{ emailHint }}
-      </small>
     </label>
 
     <label class="auth-form__field">
@@ -135,33 +94,19 @@ async function onSubmit() {
         required
         minlength="2"
         maxlength="100"
-        placeholder="Для восстановления пароля"
-      />
-      <small class="auth-form__hint">Запомните его — понадобится, если забудете пароль</small>
-    </label>
-
-    <label class="auth-form__field">
-      <span>Подтверждение ключевого слова</span>
-      <input
-        v-model="recoveryKeywordConfirm"
-        type="text"
-        autocomplete="off"
-        required
-        minlength="2"
-        maxlength="100"
-        placeholder="Повторите ключевое слово"
+        placeholder="Слово, указанное при регистрации"
       />
     </label>
 
     <label class="auth-form__field">
-      <span>Пароль</span>
+      <span>Новый пароль</span>
       <input
         v-model="password"
         type="password"
         autocomplete="new-password"
         required
         minlength="8"
-        placeholder="Пароль"
+        placeholder="Новый пароль"
       />
       <ul v-if="showPasswordRules" class="auth-form__password-rules" aria-live="polite">
         <li
@@ -186,19 +131,35 @@ async function onSubmit() {
       />
     </label>
 
-    <button type="submit" class="auth-form__submit" :disabled="submitting || auth.loading">
-      {{ submitting ? 'Регистрация…' : 'Зарегистрироваться' }}
+    <button type="submit" class="auth-form__submit" :disabled="submitting">
+      {{ submitting ? 'Сохранение…' : 'Сменить пароль' }}
     </button>
 
     <p class="auth-form__switch">
-      Уже есть аккаунт?
-      <RouterLink :to="AUTH_ROUTES.login">Войти</RouterLink>
+      <RouterLink :to="AUTH_ROUTES.login">Вернуться ко входу</RouterLink>
     </p>
   </form>
 </template>
 
 <style scoped>
 @import './auth-form.css';
+
+.auth-form__lead {
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+  margin: -0.75rem 0 1.25rem;
+}
+
+.auth-form__success {
+  padding: 0.6rem 0.75rem;
+  margin-bottom: 1rem;
+  background: #e8f5ec;
+  border: 1px solid #2d7a4a;
+  border-radius: 6px;
+  color: #1a7f37;
+  font-size: 0.9rem;
+}
 
 .auth-form__password-rules {
   list-style: none;

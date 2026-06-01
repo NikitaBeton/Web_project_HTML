@@ -5,6 +5,7 @@ function formatUser(row) {
     name: row.name,
     username: row.name,
     createdAt: row.created_at,
+    hasRecoveryKeyword: Boolean(row.recovery_keyword_hash),
   }
 }
 

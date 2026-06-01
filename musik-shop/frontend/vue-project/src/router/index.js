@@ -60,6 +60,12 @@ const router = createRouter({
           component: () => import('@/views/auth/RegisterView.vue'),
           meta: { title: 'Регистрация — Musik Shop', zone: 'guest' },
         },
+        {
+          path: 'reset-password',
+          name: 'reset-password',
+          component: () => import('@/views/auth/ResetPasswordView.vue'),
+          meta: { title: 'Восстановление пароля — Musik Shop', zone: 'guest' },
+        },
       ],
     },
     {
