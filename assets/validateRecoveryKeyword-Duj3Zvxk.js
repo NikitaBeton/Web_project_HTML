@@ -1,0 +1,1 @@
+var e=2,t=100;function n(e){return String(e??``).trim().toLowerCase()}function r(r){let i=n(r);return i.length<e?{valid:!1,errors:[`Ключевое слово: минимум ${e} символа`]}:i.length>t?{valid:!1,errors:[`Ключевое слово: не более ${t} символов`]}:{valid:!0,errors:[]}}export{r as t};
