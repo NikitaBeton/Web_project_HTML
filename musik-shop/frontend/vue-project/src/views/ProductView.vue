@@ -2,6 +2,7 @@
 import { ref, computed, onMounted, watch } from 'vue'
 import { useRoute, RouterLink } from 'vue-router'
 import PageLayout from '@/components/layout/PageLayout.vue'
+import ProductReviews from '@/components/products/ProductReviews.vue'
 import { fetchProduct } from '@/api/products'
 import { formatPrice } from '@/utils/formatPrice'
 import { useCartStore } from '@/stores/cart'
@@ -145,6 +146,8 @@ onMounted(loadProduct)
           <p v-if="addedMessage" class="product-detail__added">{{ addedMessage }}</p>
         </div>
       </article>
+
+      <ProductReviews v-if="product" :product-id="product.id" />
     </div>
   </PageLayout>
 </template>

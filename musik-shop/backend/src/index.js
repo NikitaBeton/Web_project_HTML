@@ -9,6 +9,7 @@ const { API_PREFIX, API_ROUTES } = require('./config/paths')
 const authRoutes = require('./routes/auth')
 const accountRoutes = require('./routes/account')
 const productRoutes = require('./routes/products')
+const productReviewRoutes = require('./routes/productReviews')
 
 const app = express()
 const PORT = process.env.PORT || 3000
@@ -50,6 +51,7 @@ app.get(API_ROUTES.health, (_req, res) => {
 app.use(API_ROUTES.auth.base, authRoutes)
 app.use(API_ROUTES.account.base, accountRoutes)
 app.use(API_ROUTES.products.base, productRoutes)
+app.use(`${API_ROUTES.products.base}/:productId/reviews`, productReviewRoutes)
 
 if (SERVE_FRONTEND && fs.existsSync(FRONTEND_DIST)) {
   app.use(express.static(FRONTEND_DIST))
@@ -82,6 +84,9 @@ function logEndpoints() {
   console.log(`  POST ${API_ROUTES.products.base}  (авторизация)`)
   console.log(`  PATCH ${API_ROUTES.products.base}/:id  (авторизация)`)
   console.log(`  DELETE ${API_ROUTES.products.base}/:id  (авторизация)`)
+  console.log(`  GET  ${API_ROUTES.products.base}/:id/reviews`)
+  console.log(`  POST ${API_ROUTES.products.base}/:id/reviews  (авторизация)`)
+  console.log(`  DELETE ${API_ROUTES.products.base}/:id/reviews/mine  (авторизация)`)
 
   if (SERVE_FRONTEND && fs.existsSync(FRONTEND_DIST)) {
     console.log('Фронтенд: /  (статика из dist)')

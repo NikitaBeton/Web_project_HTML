@@ -25,20 +25,11 @@ export const useOrdersStore = defineStore('orders', () => {
       status: 'В обработке',
       items: cartItems.map((i) => ({ ...i })),
       total: cartItems.reduce((s, i) => s + i.price * i.quantity, 0),
-      review: null,
     }
     orders.value.unshift(order)
     persist()
     return order
   }
 
-  function addReview(orderId, text) {
-    const order = orders.value.find((o) => o.id === orderId)
-    if (order) {
-      order.review = text
-      persist()
-    }
-  }
-
-  return { orders, createFromCart, addReview }
+  return { orders, createFromCart }
 })

@@ -10,7 +10,7 @@ export default defineConfig(({ mode }) => {
 
   return {
     base: mode === 'production' ? '/Web_project_HTML/' : '/',
-    plugins: [vue(), vueDevTools()],
+    plugins: [vue(), ...(mode === 'production' ? [] : [vueDevTools()])],
     resolve: {
       alias: {
         '@': fileURLToPath(new URL('./src', import.meta.url)),

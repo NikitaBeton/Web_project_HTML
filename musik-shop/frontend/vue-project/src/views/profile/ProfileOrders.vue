@@ -1,13 +1,12 @@
 <script setup>
-import { ref } from 'vue'
 import { storeToRefs } from 'pinia'
+import { RouterLink } from 'vue-router'
 import { formatPrice } from '@/utils/formatPrice'
 import { useOrdersStore } from '@/stores/orders'
+import { PUBLIC_ROUTES } from '@/router/routes'
 
 const ordersStore = useOrdersStore()
 const { orders } = storeToRefs(ordersStore)
-
-const reviewTexts = ref({})
 
 function formatDate(iso) {
   return new Intl.DateTimeFormat('ru-BY', {
@@ -15,13 +14,6 @@ function formatDate(iso) {
     month: 'long',
     year: 'numeric',
   }).format(new Date(iso))
-}
-
-function submitReview(orderId) {
-  const text = reviewTexts.value[orderId]?.trim()
-  if (!text) return
-  ordersStore.addReview(orderId, text)
-  reviewTexts.value[orderId] = ''
 }
 </script>
 
@@ -46,28 +38,20 @@ function submitReview(orderId) {
 
         <ul class="order-card__items">
           <li v-for="item in order.items" :key="item.id">
-            {{ item.name }} × {{ item.quantity }} — {{ formatPrice(item.price * item.quantity) }}
+            <RouterLink :to="PUBLIC_ROUTES.product(item.id)" class="order-card__item-link">
+              {{ item.name }}
+            </RouterLink>
+            × {{ item.quantity }} — {{ formatPrice(item.price * item.quantity) }}
           </li>
         </ul>
 
         <p class="order-card__total">Итого: {{ formatPrice(order.total) }}</p>
 
-        <div v-if="order.review" class="order-card__review">
-          <p class="order-card__review-text">
-            <strong>Ваш отзыв:</strong> {{ order.review }}
-          </p>
-        </div>
-        <div v-else class="order-card__review">
-          <label>
-            <span>Оставить отзыв</span>
-            <textarea
-              v-model="reviewTexts[order.id]"
-              rows="2"
-              placeholder="Расскажите о товаре…"
-            />
-          </label>
-          <button type="button" class="btn-sm" @click="submitReview(order.id)">Отправить</button>
-        </div>
+        <p class="order-card__hint">
+          Отзывы оставляются на
+          <RouterLink :to="PUBLIC_ROUTES.catalog">странице товара</RouterLink>
+          в разделе «Отзывы».
+        </p>
       </li>
     </ul>
   </div>
@@ -141,43 +125,28 @@ function submitReview(orderId) {
   margin-bottom: 0.25rem;
 }
 
+.order-card__item-link {
+  color: var(--color-accent);
+  font-weight: 600;
+}
+
+.order-card__item-link:hover {
+  text-decoration: underline;
+}
+
 .order-card__total {
   font-weight: 700;
-  margin-bottom: 1rem;
+  margin-bottom: 0.75rem;
 }
 
-.order-card__review label {
-  display: block;
-  margin-bottom: 0.5rem;
-}
-
-.order-card__review span {
-  display: block;
+.order-card__hint {
   font-size: 0.85rem;
   color: var(--color-text-muted);
-  margin-bottom: 0.35rem;
 }
 
-.order-card__review textarea {
-  width: 100%;
-  padding: 0.5rem;
-  border: 1px solid var(--color-border);
-  border-radius: 6px;
-  font-family: inherit;
-  resize: vertical;
-}
-
-.order-card__review-text {
-  font-size: 0.9rem;
-  color: var(--color-text-muted);
-}
-
-.btn-sm {
-  padding: 0.4rem 0.85rem;
-  background: var(--color-accent);
-  color: var(--color-on-accent);
-  border-radius: 6px;
-  font-size: 0.85rem;
+.order-card__hint a {
+  color: var(--color-accent);
+  font-weight: 600;
 }
 
 @media (max-width: 640px) {

@@ -18,6 +18,7 @@ const API_ROUTES = {
     list: `${API_PREFIX}/products`,
     one: (id) => `${API_PREFIX}/products/${id}`,
     filters: `${API_PREFIX}/products/filters`,
+    reviews: (id) => `${API_PREFIX}/products/${id}/reviews`,
   },
 }
 
