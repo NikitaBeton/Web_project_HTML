@@ -62,17 +62,4 @@ onMounted(async () => {
   border-radius: 8px;
 }
 
-.product-grid {
-  list-style: none;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 1.25rem;
-}
-
-@media (max-width: 640px) {
-  .product-grid {
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-    gap: 1rem;
-  }
-}
 </style>

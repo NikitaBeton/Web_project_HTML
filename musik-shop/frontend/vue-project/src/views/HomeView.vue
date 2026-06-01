@@ -136,13 +136,6 @@ onMounted(async () => {
   font-size: 1rem;
 }
 
-.product-grid {
-  list-style: none;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 1.25rem;
-}
-
 .catalog-preview__empty {
   text-align: center;
   padding: 2rem;
@@ -191,11 +184,6 @@ onMounted(async () => {
 
   .catalog-preview {
     padding: 2rem var(--page-padding-x);
-  }
-
-  .product-grid {
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-    gap: 1rem;
   }
 
   .brands {

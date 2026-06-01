@@ -199,13 +199,6 @@ onMounted(applyFromRoute)
   font-weight: 600;
 }
 
-.product-grid {
-  list-style: none;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 1.25rem;
-}
-
 .visually-hidden {
   position: absolute;
   width: 1px;
@@ -231,9 +224,5 @@ onMounted(applyFromRoute)
     width: 100%;
   }
 
-  .product-grid {
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-    gap: 1rem;
-  }
 }
 </style>

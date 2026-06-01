@@ -245,13 +245,6 @@ onMounted(async () => {
   color: var(--color-accent);
 }
 
-.product-grid {
-  list-style: none;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 1.25rem;
-}
-
 .catalog__filters-toggle {
   display: none;
   width: 100%;
@@ -286,11 +279,6 @@ onMounted(async () => {
 
   .catalog__filters--open {
     display: block;
-  }
-
-  .product-grid {
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-    gap: 1rem;
   }
 }
 </style>
