@@ -429,10 +429,10 @@ watch(
   }
 
   .header__inner {
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     padding-top: 0.5rem;
     padding-bottom: 0.5rem;
-    gap: 0.5rem 0.75rem;
+    gap: 0.5rem;
   }
 
   .header__nav {
@@ -440,10 +440,26 @@ watch(
   }
 
   .header__search {
-    order: 3;
-    flex: 1 1 100%;
+    flex: 1;
     max-width: none;
     margin-left: 0;
+    min-width: 0;
+  }
+
+  .header__search-input {
+    padding: 0.4rem 0.6rem;
+    font-size: 0.85rem;
+  }
+
+  .header__search-btn {
+    padding: 0 0.65rem;
+    font-size: 1rem;
+  }
+
+  .header__actions {
+    margin-left: auto;
+    flex-shrink: 0;
+    gap: 0.35rem;
   }
 
   .header__user-block {
@@ -452,8 +468,8 @@ watch(
 
   .header__auth {
     display: inline-flex;
-    padding: 0.4rem 0.75rem;
-    font-size: 0.8rem;
+    padding: 0.4rem 0.65rem;
+    font-size: 0.75rem;
   }
 
   .header__burger {

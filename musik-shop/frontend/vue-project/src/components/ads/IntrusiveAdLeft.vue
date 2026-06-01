@@ -5,7 +5,7 @@ import { useRoute } from 'vue-router'
 const CLOSE_DELAY_MS = 5000
 
 const AD_URL =
-  'https://www.google.com/aclk?sa=L&ai=DChsSEwiGtMXk69-UAxVNsoMHHd76OB0YACICCAEQABoCZWY&co=1&gclid=CjwKCAjw8uTQBhAdEiwAVvtJyu8JBOsYaDQYJd3Gn0K0Gkpo3HcYpviUFBNURRSLT15n0S8FnJZo2hoCGV4QAvD_BwE&cid=CAASuwHkaCVHC0yZllFYJQC0VfD1mWsE4XdZBIYm9LJXJkM0UceuLFFIawYe8rUdJbb45UUg4-u39VEqHaL7sLZ3LHBdKvyeNFcTDB-L1VGZ0tHeSvZEOwyWQzKKeoKsONPO0wtsXVH8fpagmK3K2K1r-oKIY3alH8p_nNnvUhM2-__6F1JVOsmr5Iu-rIR9s7bJvcjDWcicvOKJ0_rpFagq3jUCSIlRUvRgJzTh2aLr3XY3mPXkbEZrYrpFxkVb&cce=2&sig=AOD64_04iq6wZA9CzDQhVabngO7hUdLnfQ&q&adurl&ved=2ahUKEwjb1b3k69-UAxWL_rsIHWBBDJgQ0Qx6BAgNEAE'
+  'https://www.google.com/url?sa=t&source=web&rct=j&opi=89978449&url=https://contract.gosuslugi.ru/&ved=2ahUKEwill4fu3eSUAxVbP_sDHRNRAH0QFnoECBkQAQ&usg=AOvVaw01uw5cUxRxuVOrlUMAr0Jk'
 
 const adImageSrc = `${import.meta.env.BASE_URL}images/ad2.jpg`
 

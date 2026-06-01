@@ -118,6 +118,12 @@ const router = createRouter({
       redirect: (to) =>
         to.params.rest ? `${ACCOUNT_ROUTES.root}/${to.params.rest}` : ACCOUNT_ROUTES.root,
     },
+    {
+      path: '/:pathMatch(.*)*',
+      name: 'not-found',
+      component: () => import('@/views/NotFoundView.vue'),
+      meta: { title: '404 — Страница не найдена — Musik Shop', zone: 'public' },
+    },
   ],
 })
 
