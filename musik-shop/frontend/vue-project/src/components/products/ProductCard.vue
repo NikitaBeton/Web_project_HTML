@@ -1,8 +1,11 @@
 <script setup>
-import { RouterLink } from 'vue-router'
+import { RouterLink, useRoute, useRouter } from 'vue-router'
+import { storeToRefs } from 'pinia'
 import { formatPrice } from '@/utils/formatPrice'
 import { useCartStore } from '@/stores/cart'
 import { useFavoritesStore } from '@/stores/favorites'
+import { useAuthStore } from '@/stores/auth'
+import { AUTH_ROUTES } from '@/router/routes'
 
 defineProps({
   product: {
@@ -11,11 +14,26 @@ defineProps({
   },
 })
 
+const route = useRoute()
+const router = useRouter()
 const cart = useCartStore()
 const favorites = useFavoritesStore()
+const auth = useAuthStore()
+const { isAuthenticated } = storeToRefs(auth)
 
 function addToCart(product) {
   cart.add(product)
+}
+
+function toggleFavorite(productId) {
+  if (!isAuthenticated.value) {
+    router.push({
+      path: AUTH_ROUTES.login,
+      query: { redirect: route.fullPath },
+    })
+    return
+  }
+  favorites.toggle(productId)
 }
 </script>
 
@@ -48,7 +66,7 @@ function addToCart(product) {
         class="product-card__fav"
         :class="{ 'product-card__fav--active': favorites.isFavorite(product.id) }"
         :aria-label="favorites.isFavorite(product.id) ? 'Убрать из избранного' : 'В избранное'"
-        @click="favorites.toggle(product.id)"
+        @click="toggleFavorite(product.id)"
       >
         ♥
       </button>

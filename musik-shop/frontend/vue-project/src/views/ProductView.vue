@@ -1,16 +1,22 @@
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue'
-import { useRoute, RouterLink } from 'vue-router'
+import { useRoute, useRouter, RouterLink } from 'vue-router'
+import { storeToRefs } from 'pinia'
 import PageLayout from '@/components/layout/PageLayout.vue'
 import ProductReviews from '@/components/products/ProductReviews.vue'
 import { fetchProduct } from '@/api/products'
 import { formatPrice } from '@/utils/formatPrice'
 import { useCartStore } from '@/stores/cart'
 import { useFavoritesStore } from '@/stores/favorites'
+import { useAuthStore } from '@/stores/auth'
+import { AUTH_ROUTES } from '@/router/routes'
 
 const route = useRoute()
+const router = useRouter()
 const cart = useCartStore()
 const favorites = useFavoritesStore()
+const auth = useAuthStore()
+const { isAuthenticated } = storeToRefs(auth)
 
 const product = ref(null)
 const loading = ref(true)
@@ -56,6 +62,18 @@ function addToCart() {
   cart.add(product.value, quantity.value)
   addedMessage.value = 'Товар добавлен в корзину'
   setTimeout(() => { addedMessage.value = '' }, 2500)
+}
+
+function toggleFavorite() {
+  if (!product.value) return
+  if (!isAuthenticated.value) {
+    router.push({
+      path: AUTH_ROUTES.login,
+      query: { redirect: route.fullPath },
+    })
+    return
+  }
+  favorites.toggle(product.value.id)
 }
 
 watch(() => route.params.id, loadProduct)
@@ -137,7 +155,7 @@ onMounted(loadProduct)
               type="button"
               class="btn-fav"
               :class="{ 'btn-fav--active': favorites.isFavorite(product.id) }"
-              @click="favorites.toggle(product.id)"
+              @click="toggleFavorite"
             >
               {{ favorites.isFavorite(product.id) ? 'В избранном' : 'В избранное' }}
             </button>
